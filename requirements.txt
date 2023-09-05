@@ -1,0 +1,3 @@
+aiofauna
+aioredis
+openai
