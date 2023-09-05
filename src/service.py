@@ -1,3 +1,4 @@
+"""OpenAI Functions Service"""
 import json
 
 import openai
@@ -10,6 +11,7 @@ async def parse_openai_function(
     functions: List[Type[F]] = OpenAIFunction.Metadata.subclasses,
     **kwargs: Any,
 ) -> FunctionCall:
+    """Parses the response from OpenAI and returns a FunctionCall object."""
     choice = response["choices"][0]["message"]
     if "function_call" in choice:
         function_call_ = choice["function_call"]
@@ -31,6 +33,7 @@ async def function_call(
     functions: List[Type[F]] = OpenAIFunction.Metadata.subclasses,
     **kwargs,
 ) -> FunctionCall:
+    """Calls the function orchestrator."""
     messages = [
         {"role": "user", "content": text},
         {"role": "system", "content": "You are a function Orchestrator"},

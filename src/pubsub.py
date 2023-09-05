@@ -1,10 +1,11 @@
+"""PubSub engine"""
 import os
-from typing import AsyncGenerator, TypeVar
+from typing import AsyncGenerator
 
 import aioredis
 from aiofauna.json import to_json
 from aiofauna.typedefs import LazyProxy
-from aiofauna.utils import handle_errors, setup_logging
+from aiofauna.utils import handle_errors, process_time, setup_logging
 from aioredis.client import PubSub
 
 from .service import function_call
@@ -16,8 +17,7 @@ pool = aioredis.Redis.from_url(os.environ["REDIS_URL"])
 
 class FunctionQueue(LazyProxy[PubSub]):
     """
-    FunctionQueue Event Stream to catch function call event results
-    and push them to the client via Server Sent Events.
+    PubSub channel to send function call results to the client.
     """
 
     def __init__(self, namespace: str):
@@ -52,6 +52,7 @@ class FunctionQueue(LazyProxy[PubSub]):
         await pool.publish(self.namespace, message)
         logger.info("Message published to %s", self.namespace)
 
+    @process_time
     @handle_errors
     async def pub(self, message: str) -> None:
         """

@@ -1,4 +1,4 @@
-# functions.py
+"""OpenAI Functions."""
 from typing import Any, List, Optional
 
 import openai
@@ -7,6 +7,7 @@ from .schema import *
 
 
 async def chat_completion(text: str, context: Optional[str] = None):
+    """Chat completion with context."""
     if context is not None:
         messages = [
             {"role": "user", "content": text},

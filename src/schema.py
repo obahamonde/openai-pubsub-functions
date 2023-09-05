@@ -1,8 +1,8 @@
-# schema.py
+"""Schema for OpenAI functions."""
 from abc import ABC, abstractmethod
 from typing import Any, List, Type, TypeVar
 
-from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 F = TypeVar("F", bound="OpenAIFunction")
 
@@ -13,6 +13,7 @@ class FunctionCall(BaseModel):
 
 
 class OpenAIFunction(BaseModel, ABC):
+    """Base class for OpenAI Functions."""
     class Metadata:
         subclasses: List[Type[F]] = []
 
@@ -43,4 +44,6 @@ class OpenAIFunction(BaseModel, ABC):
 
     @abstractmethod
     async def run(self, **kwargs: Any) -> Any:
+        """Runs the logic of the function."""
         ...
+
